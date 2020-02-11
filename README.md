@@ -126,7 +126,7 @@ public class BillerManagementControllerApiExample {
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *https://api.mastercard.com/billpay-exchange/biller-upload*
+All URIs are relative to *https://api.mastercard.com/billpay-exchange/biller-management*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
