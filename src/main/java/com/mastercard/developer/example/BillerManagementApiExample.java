@@ -22,7 +22,7 @@ public class BillerManagementApiExample {
     private static String PAYLOAD_PATH = "payloads/biller-management-%s.json";
 
     private static boolean runThisScenario(String[] args, String scenario) {
-        return (args!=null && args.length>0 && args[0].contains(scenario)) || (args == null || args.length == 0);
+        return (args!=null && args.length>0 && args[0].toLowerCase().contains(scenario)) || (args == null || args.length == 0);
     }
 
     private static ObjectMapper objectMapper;
@@ -43,18 +43,22 @@ public class BillerManagementApiExample {
         BillerManagementControllerApi billerManagementControllerApi = new BillerManagementControllerApi(apiClient);
 
         if(runThisScenario(args,"add")) {
+            // This is to add a new Biller into Billpay Exchange
             executePostBillerScenario(billerManagementControllerApi, "add");
         }
 
         if(runThisScenario(args,"update")) {
+            // This is to update details of an existing Biller
             executePostBillerScenario(billerManagementControllerApi, "update");
         }
 
         if(runThisScenario(args,"deactivate")) {
+            // This is to deactivate an existing Biller
             executePostBillerScenario(billerManagementControllerApi, "deactivate");
         }
 
         if(runThisScenario(args,"all")) {
+            // This is to add, update, and deactivate Billers in same request payload
             executePostBillerScenario(billerManagementControllerApi, "all");
         }
 
@@ -62,7 +66,7 @@ public class BillerManagementApiExample {
 
     private static void executePostBillerScenario(BillerManagementControllerApi billerManagementControllerApi, String scenario) {
         try{
-            List<BillerManagementRequest> request = getRequestFromJson(scenario);
+            List<BillerManagementRequest> request = getRequestFromJson(scenario); // read sample JSON payload into java objects
             printRequest(request, scenario);
             List<BillerManagementResponse> response = billerManagementControllerApi.processBillerUploadPostRequestUsingPOST(request);
             printResponse(response);

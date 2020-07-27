@@ -123,6 +123,7 @@ public class BillerManagementControllerApiExample {
 }
 
 ```
+Client should generate list of BillerManagementRequest model based on needs.
 
 ## Documentation for API Endpoints
 
@@ -165,7 +166,6 @@ Bill_Pay_Development_Support@mastercard.com
 
 ## Steps to run the application from command line
 
-
 - Create a new project from Mastercard Developer Zone - developer.mastercard.com
 
 - Select "Biller Management API" from Choose API dropdown and click “Create Project” from the API documentation page.
@@ -203,23 +203,26 @@ Bill_Pay_Development_Support@mastercard.com
 
 - Argument: An argument which defines the feature user wants to run through command line. If you don't specify this argument, it will run all the features("Add", "Update" and "Deactivate") one after the other
 
-Add : Add a new Biller into Billpay Exchange
+  - Add : Add a new Biller into Billpay Exchange
 
-Update : Update an existing Biller in Billpay Exchange
+  - Update : Update an existing Biller in Billpay Exchange
 
-Deactivate : Deactivate an existing Biller from Billpay Exchange
+  - Deactivate : Deactivate an existing Biller from Billpay Exchange
 
-All: Combine "Add", "Update", "Deactivate" into one request
+  - All: Combine "Add", "Update", "Deactivate" into one request
 
-- Command line example to run one feature of the application:
-`java -jar target/biller-management-client-1.0.0.jar getbenefits` using this command the application runs only getbenefits feature. 
+- Command line examples:
+  - "Add Biller":
+`java -jar target/biller-management-client-1.0.0.jar Add`.
  
-- To run more than one feature then specify the features with comma separated. Example: `java -jar target/biller-management-client-1.0.0.jar add,update` here it executes only these 2 features.
+  - "Update Biller":
+`java -jar target/biller-management-client-1.0.0.jar Update`.
 
-- To run all the features use this command: `java -jar target/biller-management-client-1.0.0.jar`. 
+  - "Deactivate Biller":
+`java -jar target/biller-management-client-1.0.0.jar Deactivate`.
 
-- To run the feature one after the other execute the command `java -jar target/biller-management-client-1.0.0.jar add` then again run the command with different feature `java -jar target/biller-management-client-1.0.0.jar update` and so on.
-
+  - Run "All" scenarios in one request:
+`java -jar target/biller-management-client-1.0.0.jar All`.
 
 
 <br />
