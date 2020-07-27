@@ -203,16 +203,19 @@ Bill_Pay_Development_Support@mastercard.com
 
 - Argument: An argument which defines the feature user wants to run through command line. If you don't specify this argument, it will run all the features("Add", "Update" and "Deactivate") one after the other
 
-  - Add : Add a new Biller into Billpay Exchange
+  - Add : Add a new Biller into Billpay Exchange.
+    <br/>User needs to provide values for all required fields in BillerManagementRequest model.
 
-  - Update : Update an existing Biller in Billpay Exchange
+  - Update : Update an existing Biller in Billpay Exchange. 
+    <br/>User only needs to provide values for the fields that need to be updated. Field that does not exist in request payload means no changes needed.
 
-  - Deactivate : Deactivate an existing Biller from Billpay Exchange
-
-  - All: Combine "Add", "Update", "Deactivate" into one request
+  - Deactivate : Deactivate an existing Biller from Billpay Exchange.
+    <br/>Only need to provide values for DeactivationModel in BillerManagementRequest Model
+    
+  - All: Combine "Add", "Update", "Deactivate" into one request.
 
 - Command line examples:
-  - "Add Biller":
+  - "Add Biller": 
 `java -jar target/biller-management-client-1.0.0.jar Add`.
  
   - "Update Biller":

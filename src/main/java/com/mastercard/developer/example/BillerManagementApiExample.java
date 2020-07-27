@@ -44,16 +44,20 @@ public class BillerManagementApiExample {
 
         if(runThisScenario(args,"add")) {
             // This is to add a new Biller into Billpay Exchange
+            // Provides values for all required fields in BillerManagementRequest model
             executePostBillerScenario(billerManagementControllerApi, "add");
         }
 
         if(runThisScenario(args,"update")) {
             // This is to update details of an existing Biller
+            // Only need to provide values for the fields that need to be updated, providing empty value means user wants to
+            // update the field to Null value. Fields not exist in requesy payload means no changes needed.
             executePostBillerScenario(billerManagementControllerApi, "update");
         }
 
         if(runThisScenario(args,"deactivate")) {
             // This is to deactivate an existing Biller
+            // Only need to provide values for DeactivationModel in BillerManagementRequest Model
             executePostBillerScenario(billerManagementControllerApi, "deactivate");
         }
 
