@@ -511,4 +511,4 @@ components:
         Errors: { Error: [ { Source: "Billpay Exchange Biller Management Service", ReasonCode: "BPMCAPIBLR_ERR_0004", Description: "User Error", Recoverable: true, Details: "Client ID 'client-id-1234567890' does not have access to manage Billers" } ] }
     Error-500:
       value:
-        Errors: { Error: [ { Source: "Billpay Exchange Biller Management Service", ReasonCode: "BPMCAPIBLR_ERR_0001", Description: "Server Error", Recoverable: false, Details: "Internal Server Error" } ] }
+        Errors: { Error: [ { Source: "Billpay Exchange Biller Management Service", ReasonCode: "BPMCAPIBLR_ERR_0000", Description: "Server Error", Recoverable: false, Details: "Internal Server Error" } ] }
