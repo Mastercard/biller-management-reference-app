@@ -16,7 +16,7 @@ paths:
     post:
       tags:
         - biller-management-controller
-      summary: Add, edit or deactivate one or multiple Billers in Biller Pay Exchange
+      summary: Add, Update or Deactivate one or multiple Billers in Biller Pay Exchange
       operationId: processBillerUploadPostRequestUsingPOST
       requestBody:
         description: Billers to be uploaded to Biller Pay Exchange
@@ -27,61 +27,9 @@ paths:
               type: array
               items:
                 $ref: '#/components/schemas/BillerManagementRequest'
-            example:
-              - action: Add
-                effectiveDate: 04/01/2020
-                general:
-                  billerId: '0001234567'
-                  billerLogoUrl: www.wandaauto.com
-                  billerShortName: Wanda Auto
-                  convenienceFee: 'Yes'
-                  estimatedPostingHour: '10'
-                  termsAndConditions: Terms And Conditions
-                serviceRelationships:
-                  - bspId: '000123'
-                    serviceType: BPX_CL_EB_PAYC
-                cardPaymentSupport:
-                  cardEnabled: 'Yes'
-                  cardNetworks:
-                    - MAST
-                    - VISA
-                  cardTypes:
-                    - CRDT
-                convenienceFees:
-                  - paymentType: BANK
-                    flatFee: '2.0'
-                    percentFee: '0.0'
-                  - paymentType: CRDT
-                    flatFee: '2.0'
-                    percentFee: '0.0'
-                serviceAreas:
-                  zipCodes: "63301,63302,63303"
-                consumerAuths:
-                  - category: IDEN
-                    categoryLabel: Iden Label
-                    dataType: A
-                    maxLength: '2'
-                    notes: Max length 2 for IDEN category
-              - action: Update
-                effectiveDate: 05/01/2020
-                general:
-                  billerId: '0001234568'
-                  billerLogoUrl: 'www.alexauto.com'
-                  termsAndConditions: 'Updated Terms And Conditions'
-                consumerAuths:
-                  - recordAction: Add
-                    category: IDEN
-                    categoryLabel: Iden Label
-                    dataType: A
-                    maxLength: '2'
-                    notes: Max length 2 for IDEN category
-              - action: Deactivate
-                effectiveDate: 06/01/2020
-                general:
-                  billerId: '0001234569'
-                deactivation:
-                  deactivationReasonCode: 'BCON'
-                  deactivationNotes: 'Deactivate Biller 0001234568'
+            examples:
+              Biller Management with Add, Update and Deactivate:
+                $ref: '#/components/examples/BillerManagementRequestExample'
       responses:
         '200':
           description: 'Successfully processed the list of Billers'
@@ -91,73 +39,27 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/BillerManagementResponse'
-              example:
-                - action: 'Add'
-                  billerId: '0001234567'
-                  statusIndicator: 'REJECTED'
-                  description: 'Rejected due to validation errors, total 1 error(s) found'
-                  workRequestId: null
-                  effectiveDate: '04/01/2020'
-                  errors:
-                    - code: BPMCAPIBLR_WARN_1002
-                      message: general.billerLogoUrl - Data value/format is not valid
-                - action: 'Update'
-                  billerId: '0001234568'
-                  statusIndicator: 'SUCCESS'
-                  description: 'Successfully created Biller workflow request'
-                  workRequestId: '123'
-                  effectiveDate: '05/01/2020'
-                  errors: null
-                - action: 'Deactivate'
-                  billerId: '0001234569'
-                  statusIndicator: 'SUCCESS'
-                  description: 'Successfully created Biller deactivation workflow request'
-                  workRequestId: '124'
-                  effectiveDate: '06/01/2020'
-                  errors: null
-
+              examples:
+                Biller Management 200 response:
+                  $ref: '#/components/examples/BillerManagementResponseExample'
         '403':
           description: 'User Access Denied'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ServerError'
-              example:
-                Errors:
-                  Error:
-                    - Source: Billpay Exchange Biller Management Service
-                      ReasonCode: BPMCAPIBLR_ERR_0004
-                      Description: User Error
-                      Recoverable: true
-                      Details: "Client ID 'client-id-1234567890' does not have access to manage Billers"
+                $ref: '#/components/schemas/Errors'
+              examples:
+                Error-403:
+                  $ref: "#/components/examples/Error-403"
         '500':
           description: 'Internal Server Error, please contact Billpay Exchange Support Team'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ServerError'
-              example:
-                Errors:
-                  Error:
-                    - Source: Billpay Exchange Biller Management Service
-                      ReasonCode: BPMCAPIBLR_ERR_0000
-                      Description: Server Error
-                      Recoverable: true
-                      Details: Internal Server Error
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ServerError'
-              example:
-                Errors:
-                  Error:
-                    - Source: Billpay Exchange Biller Management Service
-                      ReasonCode: BPMCAPIBLR_ERR_0000
-                      Description: Server Error
-                      Recoverable: true
-                      Details: Internal Server Error
+                $ref: '#/components/schemas/Errors'
+              examples:
+                Error-500:
+                  $ref: "#/components/examples/Error-500"
       deprecated: false
 components:
   schemas:
@@ -174,12 +76,17 @@ components:
       properties:
         action:
           type: string
+          minLength: 3
+          maxLength: 10
           description: "Biller Action, avaliable values are: Add, Update, Deactivate"
           example: 'Add'
         effectiveDate:
           type: string
+          pattern: (0[1-9]|1[012])[\/](0[1-9]|[12][0-9]|3[01])[\/]((19|20)[0-9]{2})$
+          minLength: 10
+          maxLength: 10
           description: 'Effective Date, format MM/DD/YYYY'
-          example: '04/01/2020'
+          example: '12/31/2030'
         general:
           $ref: '#/components/schemas/GeneralModel'
         serviceRelationships:
@@ -215,21 +122,34 @@ components:
       properties:
         action:
           type: string
+          minLength: 0
+          maxLength: 10
           description: Action
         billerId:
           type: string
+          minLength: 0
+          maxLength: 10
+          pattern: "^[0-9]{10}$"
           description: Biller ID
         statusIndicator:
           type: string
-          description: Status Indicator
+          minLength: 7
+          maxLength: 8
+          description: "Status Indicator, avaliable values are: SUCCESS, REJECTED"
         description:
           type: string
+          minLength: 0
+          maxLength: 50
           description: Description
         workRequestId:
           type: string
+          minLength: 0
+          maxLength: 10
           description: Biller Work Request Id
         effectiveDate:
           type: string
+          minLength: 0
+          maxLength: 10
           description: Effective Date
         errors:
           type: array
@@ -250,26 +170,38 @@ components:
       properties:
         billerId:
           type: string
+          minLength: 10
+          maxLength: 10
           description: 'Biller Id, 10 digit numeric value'
           example: '0001234567'
         billerLogoUrl:
           type: string
+          minLength: 0
+          maxLength: 512
           description: 'Biller Logo URL, max length 512 characters'
           example: 'www.wandaauto.com'
         billerShortName:
           type: string
+          minLength: 0
+          maxLength: 35
           description: 'Biller ShortName, max length 35 characters'
           example: 'Wanda Auto'
         convenienceFee:
           type: string
+          minLength: 0
+          maxLength: 3
           description: "Convenience Fee Flag, avaliable values are: Yes, No"
           example: 'Yes'
         estimatedPostingHour:
           type: string
+          minLength: 0
+          maxLength: 2
           description: 'Estimated Posting Number, max length 2 numeric value'
           example: '10'
         termsAndConditions:
           type: string
+          minLength: 0
+          maxLength: 999999
           description: 'Terms And Conditions Text'
           example: 'Terms And Conditions'
     ServiceRelationshipModel:
@@ -282,14 +214,20 @@ components:
       properties:
         recordAction:
           type: string
+          minLength: 3
+          maxLength: 6
           description: "Record Action, avaliable values are: Add, Delete and Update, only required when Biller action is 'Update'"
           example: "Add"
         bspId:
           type: string
+          minLength: 6
+          maxLength: 6
           description: 'BSP ID, 6 digit numeric value'
           example: '000123'
         serviceType:
           type: string
+          minLength: 0
+          maxLength: 15
           description: "Biller Service Type, avaliable values are: BPX_CL_EB_PAYC, BPX_CL_EB, BPX_CL"
           example: 'BPX_CL_EB_PAYC'
     CardPaymentModel:
@@ -303,6 +241,8 @@ components:
       properties:
         cardEnabled:
           type: string
+          minLength: 0
+          maxLength: 3
           description: "Card Payment Support Flag, avaliable values are: Yes, No"
           example: 'Yes'
         cardNetworks:
@@ -310,12 +250,16 @@ components:
           description: "Card Networks, avaliable values are: MAST, VISA, AMEX, DSVR"
           items:
             type: string
+            minLength: 0
+            maxLength: 5
           example: [MAST, VISA]
         cardTypes:
           type: array
           description: "Card Types, avaliable values are: CRDT, DEBT, PRPD"
           items:
             type: string
+            minLength: 0
+            maxLength: 5
           example: [CRDT]
     ConvenienceFeeModel:
       type: object
@@ -328,18 +272,26 @@ components:
       properties:
         recordAction:
           type: string
+          minLength: 3
+          maxLength: 6
           description: "Record Action, avaliable values are: Add, Delete and Update, only required when Biller action is 'Update'"
           example: "Add"
         paymentType:
           type: string
+          minLength: 0
+          maxLength: 5
           description: "Payment Type, avaliable values are: CRDT, DEBT, PRPD, BANK"
           example: CRDT
         flatFee:
           type: string
+          minLength: 0
+          maxLength: 10
           description: Flat Fee
           example: '2.0'
         percentFee:
           type: string
+          minLength: 0
+          maxLength: 10
           description: Percent Fee
           example: '0.0'
     ServiceAreaModel:
@@ -350,6 +302,8 @@ components:
       properties:
         zipCodes:
           type: string
+          minLength: 0
+          maxLength: 600000
           description: 'Zip Codes, comma separated 5 digit numeric values'
           example: '63301, 63302, 63303'
     ConsumerAuthenticationModel:
@@ -365,26 +319,38 @@ components:
       properties:
         recordAction:
           type: string
+          minLength: 3
+          maxLength: 6
           description: "Record Action, avaliable values are: Add, Delete and Update, only required when Biller action is 'Update'"
           example: "Add"
         category:
           type: string
+          minLength: 0
+          maxLength: 4
           description: "Category Code, avaliable values are: IDEN, EMAL, PHON, CODE, ADDR, OTHR"
           example: 'IDEN'
         categoryLabel:
           type: string
+          minLength: 0
+          maxLength: 128
           description: 'Category Label, max length 128 characters'
           example: 'Iden Label'
         dataType:
           type: string
+          minLength: 0
+          maxLength: 1
           description: "Consumer Authentication Data Type, avaliable values are: A, P, B, N, S, C, D"
           example: 'A'
         maxLength:
           type: string
+          minLength: 0
+          maxLength: 3
           description: 'Consumer Authentication Maximum length, max length 3 numeric value'
           example: '2'
         notes:
           type: string
+          minLength: 0
+          maxLength: 1000
           description: 'Notes text, max length 1000 characters'
           example: 'Max length 2 for IDEN category'
     DeactivationModel:
@@ -397,13 +363,17 @@ components:
       properties:
         deactivationReasonCode:
           type: string
+          minLength: 0
+          maxLength: 4
           description: "Deactivation Reason Code, avaliable values are: BCON, BMIG, LVOL, RBLR, OTHR"
           example: 'BCON'
         deactivationNotes:
           type: string
+          minLength: 0
+          maxLength: 1000
           description: 'Deactivation Note, max length 1000 characters'
           example: 'Deactiviation Notes for Wanda Auto'
-    ServerError:
+    Errors:
       type: object
       title: Server Error Model
       description: Biller Management API Server Error Model
@@ -412,6 +382,7 @@ components:
       properties:
         Errors:
           type: object
+          title: ErrorsList
           required:
             - Error
           properties:
@@ -447,7 +418,97 @@ components:
       properties:
         code:
           type: "string"
+          minLength: 0
+          maxLength: 50
           example: 'BPMCAPIBLR_WARN_1001'
         message:
           type: "string"
+          minLength: 0
+          maxLength: 250
           example: "general.billerId - Required field is missing"
+  examples:
+    BillerManagementRequestExample:
+      value:
+        - action: Add
+          effectiveDate: 12/31/2030
+          general:
+            billerId: '0001234567'
+            billerLogoUrl: www.wandaauto.com
+            billerShortName: Wanda Auto
+            convenienceFee: 'Yes'
+            estimatedPostingHour: '10'
+            termsAndConditions: Terms And Conditions
+          serviceRelationships:
+            - bspId: '000123'
+              serviceType: BPX_CL_EB_PAYC
+          cardPaymentSupport:
+            cardEnabled: 'Yes'
+            cardNetworks:
+              - MAST
+              - VISA
+            cardTypes:
+              - CRDT
+          convenienceFees:
+            - paymentType: BANK
+              flatFee: '2.0'
+              percentFee: '0.0'
+            - paymentType: CRDT
+              flatFee: '2.0'
+              percentFee: '0.0'
+          serviceAreas:
+            zipCodes: "63301,63302,63303"
+          consumerAuths:
+            - category: IDEN
+              categoryLabel: Iden Label
+              dataType: A
+              maxLength: '2'
+              notes: Max length 2 for IDEN category
+        - action: Update
+          effectiveDate: 12/31/2030
+          general:
+            billerId: '0001234568'
+            billerLogoUrl: 'www.alexauto.com'
+            termsAndConditions: 'Updated Terms And Conditions'
+          consumerAuths:
+            - recordAction: Add
+              category: IDEN
+              categoryLabel: Iden Label
+              dataType: A
+              maxLength: '2'
+              notes: Max length 2 for IDEN category
+        - action: Deactivate
+          effectiveDate: 12/31/2030
+          general:
+            billerId: '0001234569'
+          deactivation:
+            deactivationReasonCode: 'BCON'
+            deactivationNotes: 'Deactivate Biller 0001234568'
+    BillerManagementResponseExample:
+      value:
+        - action: 'Add'
+          billerId: '0001234567'
+          statusIndicator: 'SUCCESS'
+          description: 'Successfully created Biller workflow request'
+          workRequestId: '121'
+          effectiveDate: '12/31/2030'
+          errors: null
+        - action: 'Update'
+          billerId: '0001234568'
+          statusIndicator: 'SUCCESS'
+          description: 'Successfully created Biller workflow request'
+          workRequestId: '123'
+          effectiveDate: '12/31/2030'
+          errors: null
+        - action: 'Deactivate'
+          billerId: '0001234569'
+          statusIndicator: 'SUCCESS'
+          description: 'Successfully created Biller deactivation workflow request'
+          workRequestId: '124'
+          effectiveDate: '12/31/2030'
+          errors: null
+    Error-403:
+      value:
+        Errors: { Error: [ { Source: "Billpay Exchange Biller Management Service", ReasonCode: "BPMCAPIBLR_ERR_0004", Description: "User Error", Recoverable: true, Details: "Client ID 'client-id-1234567890' does not have access to manage Billers" } ] }
+    Error-500:
+      value:
+        Errors: { Error: [ { Source: "Billpay Exchange Biller Management Service", ReasonCode: "BPMCAPIBLR_ERR_0001", Description: "Server Error", Recoverable: false, Details: "Internal Server Error" } ] }

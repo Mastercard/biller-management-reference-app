@@ -1,0 +1,11 @@
+[
+	{
+		"action": "Deactivate",
+		"billerId": "0001234569",
+		"statusIndicator": "SUCCESS",
+		"description": "Successfully created Biller deactivation workflow request",
+		"workRequestId": "124",
+		"effectiveDate": "12/31/2030",
+		"errors": null
+	}
+]

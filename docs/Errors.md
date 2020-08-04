@@ -1,14 +1,13 @@
 
 
-# UserErrorModel
+# Errors
 
-User Error model for validation errors
+Biller Management API Server Error Model
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**code** | **String** |  | 
-**message** | **String** |  | 
+**errors** | [**ErrorsList**](ErrorsList.md) |  | 
 
 
 

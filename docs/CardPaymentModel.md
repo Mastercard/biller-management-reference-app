@@ -1,7 +1,10 @@
 
+
 # CardPaymentModel
 
+Biller Card Payment Model
 ## Properties
+
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **cardEnabled** | **String** | Card Payment Support Flag, avaliable values are: Yes, No | 

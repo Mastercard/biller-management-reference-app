@@ -1,0 +1,11 @@
+[
+	{
+		"action": "Update",
+		"billerId": "0001234568",
+		"statusIndicator": "SUCCESS",
+		"description": "Successfully created Biller workflow request",
+		"workRequestId": "123",
+		"effectiveDate": "12/31/2030",
+		"errors": null
+	}
+]

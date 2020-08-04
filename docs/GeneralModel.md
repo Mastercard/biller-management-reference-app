@@ -1,7 +1,10 @@
 
+
 # GeneralModel
 
+Model class for Biller work request general section
 ## Properties
+
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **billerId** | **String** | Biller Id, 10 digit numeric value | 
