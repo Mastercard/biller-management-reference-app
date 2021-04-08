@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.core.io.Resource;
 
 import javax.annotation.PostConstruct;
 
@@ -22,7 +21,7 @@ public class MastercardProperties {
 
     private String keystorePassword;
 
-    private Resource keyFile;
+    private String keyFile;
 
 
     @PostConstruct

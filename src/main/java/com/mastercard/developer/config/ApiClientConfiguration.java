@@ -23,7 +23,7 @@ public class ApiClientConfiguration {
     public ApiClient apiClient(@Autowired MastercardProperties mcProperties) {
         ApiClient client = new ApiClient();
         try {
-            PrivateKey signingKey = AuthenticationUtils.loadSigningKey(mcProperties.getKeyFile().getFile().getAbsolutePath(), mcProperties.getKeystoreAlias(), mcProperties.getKeystorePassword());
+            PrivateKey signingKey = AuthenticationUtils.loadSigningKey(mcProperties.getKeyFile(), mcProperties.getKeystoreAlias(), mcProperties.getKeystorePassword());
             client.setBasePath(mcProperties.getBasePath());
             client.setDebugging(true);
             client.setReadTimeout(40000);

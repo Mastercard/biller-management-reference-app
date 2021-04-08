@@ -230,21 +230,22 @@ components:
           maxLength: 15
           description: "Biller Service Type, avaliable values are: BPX_CL_EB_PAYC, BPX_CL_EB, BPX_CL"
           example: 'BPX_CL_EB_PAYC'
+        settlementServices:
+          type: array
+          description: "Settlement Services, avaliable values are: RPPS, MPGS, PDSS; RPPS is mandatory"
+          items:
+            type: string
+            minLength: 1
+            maxLength: 3
+          example: [RPPS, MPGS]
     CardPaymentModel:
       type: object
       title: Card Payment Model
-      description: Biller Card Payment Model
+      description: Biller Card Payment Model, should only contain value when MPGS settlement service presents
       required:
-        - cardEnabled
         - cardNetworks
         - cardTypes
       properties:
-        cardEnabled:
-          type: string
-          minLength: 0
-          maxLength: 3
-          description: "Card Payment Support Flag, avaliable values are: Yes, No"
-          example: 'Yes'
         cardNetworks:
           type: array
           description: "Card Networks, avaliable values are: MAST, VISA, AMEX, DSVR"
@@ -440,9 +441,11 @@ components:
             termsAndConditions: Terms And Conditions
           serviceRelationships:
             - bspId: '000123'
-              serviceType: BPX_CL_EB_PAYC
+              serviceType: BPX_CL_EB_PAY
+              settlementServices:
+                - RPPS
+                - MPGS
           cardPaymentSupport:
-            cardEnabled: 'Yes'
             cardNetworks:
               - MAST
               - VISA
@@ -511,4 +514,4 @@ components:
         Errors: { Error: [ { Source: "Billpay Exchange Biller Management Service", ReasonCode: "BPMCAPIBLR_ERR_0004", Description: "User Error", Recoverable: true, Details: "Client ID 'client-id-1234567890' does not have access to manage Billers" } ] }
     Error-500:
       value:
-        Errors: { Error: [ { Source: "Billpay Exchange Biller Management Service", ReasonCode: "BPMCAPIBLR_ERR_0000", Description: "Server Error", Recoverable: false, Details: "Internal Server Error" } ] }
+        Errors: { Error: [ { Source: "Billpay Exchange Biller Management Service", ReasonCode: "BPMCAPIBLR_ERR_0001", Description: "Server Error", Recoverable: false, Details: "Internal Server Error" } ] }

@@ -13,7 +13,7 @@ import java.util.List;
 
 public class SampleResponseLoader {
 
-    private static String PAYLOAD_PATH = "payloads/biller-management-%s-response.json";
+    private static String PAYLOAD_PATH = "biller-management-%s-response.json";
 
     public static List<BillerManagementResponse> getResponseFromJson(String scenario) throws IOException {
         InputStream inputStream  = BillerManagementApiExample.class.getClassLoader().getResourceAsStream(String.format(PAYLOAD_PATH, scenario).toLowerCase());
