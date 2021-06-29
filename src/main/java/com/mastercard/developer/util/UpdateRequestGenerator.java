@@ -3,6 +3,7 @@ package com.mastercard.developer.util;
 import org.openapitools.client.model.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class UpdateRequestGenerator {
@@ -118,9 +119,6 @@ public class UpdateRequestGenerator {
             serviceUpdate.setRecordAction("Update");
             serviceUpdate.setBspId("013001");
             serviceUpdate.setServiceType("BPX_CL_EB"); // downgrade service type to BPX_CL_EB
-            List<String> settlementServicesUpdate = new ArrayList<>();
-            settlementServicesUpdate.add("RPPS"); //mandatory settlement service
-            serviceUpdate.setSettlementServices(settlementServicesUpdate);
             list.add(serviceUpdate);
         } else{
             //if BSP ID changed, then it's an 'Add' new and "Delete" old action
@@ -131,12 +129,12 @@ public class UpdateRequestGenerator {
             List<String> settlementServicesAdd = new ArrayList<>();
             settlementServicesAdd.add("RPPS"); //mandatory settlement service
             serviceAdd.setSettlementServices(settlementServicesAdd);
+            serviceAdd.setCountries(Arrays.asList("USA")); // default as USA
             list.add(serviceAdd);
 
             ServiceRelationshipModel serviceDelete = new ServiceRelationshipModel();
             serviceDelete.setRecordAction("Delete");
-            serviceDelete.setBspId("013111"); // new servive relationship
-            serviceDelete.setServiceType("BPX_CL_EB_PAYC");
+            serviceDelete.setBspId("013111"); // delete existing servive relationship
             list.add(serviceDelete);
         }
         return list;

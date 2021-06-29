@@ -3,6 +3,7 @@ package com.mastercard.developer.util;
 import org.openapitools.client.model.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class AddRequestGenerator {
@@ -57,6 +58,7 @@ public class AddRequestGenerator {
         general.setEstimatedPostingHour("3");
         general.setTermsAndConditions("Terms and Conditions");
         general.setConvenienceFee(convenienceFeeFlag);
+        general.setCurrencies(Arrays.asList("840")); //default as 840
         return general;
     }
 
@@ -71,6 +73,7 @@ public class AddRequestGenerator {
             settlementServices.add("MPGS");
         }
         service.setSettlementServices(settlementServices);
+        service.setCountries(Arrays.asList("USA")); //default as USA
         list.add(service);
         return list;
     }

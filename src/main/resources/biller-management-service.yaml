@@ -166,7 +166,7 @@ components:
         - billerShortName
         - convenienceFee
         - estimatedPostingHour
-        - termsAndConditions
+        - currencies
       properties:
         billerId:
           type: string
@@ -204,6 +204,14 @@ components:
           maxLength: 999999
           description: 'Terms And Conditions Text'
           example: 'Terms And Conditions'
+        currencies:
+          type: array
+          description: "Currencies, numeric currency code"
+          items:
+            type: string
+            minLength: 3
+            maxLength: 3
+          example: [840]
     ServiceRelationshipModel:
       type: object
       title: Service Relationship Model
@@ -238,6 +246,14 @@ components:
             minLength: 1
             maxLength: 3
           example: [RPPS, MPGS]
+        countries:
+          type: array
+          description: "Countries, alpha3 country code"
+          items:
+            type: string
+            minLength: 3
+            maxLength: 3
+          example: [USA]
     CardPaymentModel:
       type: object
       title: Card Payment Model
@@ -439,12 +455,16 @@ components:
             convenienceFee: 'Yes'
             estimatedPostingHour: '10'
             termsAndConditions: Terms And Conditions
+            currencies:
+              - '840'
           serviceRelationships:
             - bspId: '000123'
               serviceType: BPX_CL_EB_PAY
               settlementServices:
                 - RPPS
                 - MPGS
+              countries:
+                - USA
           cardPaymentSupport:
             cardNetworks:
               - MAST
