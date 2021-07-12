@@ -198,10 +198,10 @@ The `com.mastercard.developer.interceptors` package will provide you with some r
 
 ### Request Examples <a name="request-examples"></a>
 You can change the default input passed to APIs, modify values in following files,
-* [Add Billers](https://github.com/Mastercard/biller-management-reference/blob/master/src/main/resources/payloads/biller-management-add.json)
-* [Update Billers](https://github.com/Mastercard/biller-management-reference/blob/master/src/main/resources/payloads/biller-management-update.json)
-* [Deactivate Billers](https://github.com/Mastercard/biller-management-reference/blob/master/src/main/resources/payloads/biller-management-deactivate.json)
-* [Multiple Billers](https://github.com/Mastercard/biller-management-reference/blob/master/src/main/resources/payloads/biller-management-all.json)
+* [Add Billers](src/main/resources/payloads/biller-management-add.json)
+* [Update Billers](src/main/resources/payloads/biller-management-update.json)
+* [Deactivate Billers](src/main/resources/payloads/biller-management-deactivate.json)
+* [Multiple Billers](src/main/resources/payloads/biller-management-all.json)
 
 ### Request and Response Models <a name="request-response-models"></a>
 

@@ -1,0 +1,13 @@
+[
+  {
+    "action":"Deactivate",
+    "effectiveDate":"",
+    "general":{
+      "billerId":"1234567820"
+    },
+    "deactivation":{
+      "deactivationReasonCode":"BCON",
+      "deactivationNotes":"deactivate notes"
+    }
+  }
+]

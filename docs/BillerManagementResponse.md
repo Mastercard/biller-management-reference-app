@@ -1,8 +1,9 @@
 
 
-# BillerUploadResponse
+# BillerManagementResponse
 
 Response Model class for Biller Management API
+
 ## Properties
 
 Name | Type | Description | Notes

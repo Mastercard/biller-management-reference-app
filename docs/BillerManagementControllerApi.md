@@ -9,7 +9,7 @@ Method | HTTP request | Description
 
 <a name="processBillerUploadPostRequestUsingPOST"></a>
 # **processBillerUploadPostRequestUsingPOST**
-> List&lt;BillerUploadResponse&gt; processBillerUploadPostRequestUsingPOST(billerUploadRequest)
+> List&lt;BillerManagementResponse&gt; processBillerUploadPostRequestUsingPOST(billerManagementRequest)
 
 Add, Update or Deactivate one or multiple Billers in Biller Pay Exchange
 
@@ -28,9 +28,9 @@ public class Example {
     defaultClient.setBasePath("https://api.mastercard.com/billpay-exchange/biller-management");
 
     BillerManagementControllerApi apiInstance = new BillerManagementControllerApi(defaultClient);
-    List<BillerUploadRequest> billerUploadRequest = Arrays.asList(); // List<BillerUploadRequest> | Billers to be uploaded to Biller Pay Exchange
+    List<BillerManagementRequest> billerManagementRequest = Arrays.asList(); // List<BillerManagementRequest> | Billers to be uploaded to Biller Pay Exchange
     try {
-      List<BillerUploadResponse> result = apiInstance.processBillerUploadPostRequestUsingPOST(billerUploadRequest);
+      List<BillerManagementResponse> result = apiInstance.processBillerUploadPostRequestUsingPOST(billerManagementRequest);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling BillerManagementControllerApi#processBillerUploadPostRequestUsingPOST");
@@ -47,11 +47,11 @@ public class Example {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **billerUploadRequest** | [**List&lt;BillerUploadRequest&gt;**](BillerUploadRequest.md)| Billers to be uploaded to Biller Pay Exchange |
+ **billerManagementRequest** | [**List&lt;BillerManagementRequest&gt;**](BillerManagementRequest.md)| Billers to be uploaded to Biller Pay Exchange |
 
 ### Return type
 
-[**List&lt;BillerUploadResponse&gt;**](BillerUploadResponse.md)
+[**List&lt;BillerManagementResponse&gt;**](BillerManagementResponse.md)
 
 ### Authorization
 

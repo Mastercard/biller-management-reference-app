@@ -3,6 +3,7 @@
 # ErrorDetail
 
 Error detail model for Biller Management API
+
 ## Properties
 
 Name | Type | Description | Notes

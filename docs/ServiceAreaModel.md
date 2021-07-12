@@ -2,6 +2,7 @@
 
 # ServiceAreaModel
 
+
 ## Properties
 
 Name | Type | Description | Notes

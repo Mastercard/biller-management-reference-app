@@ -1,8 +1,9 @@
 
 
-# BillerUploadRequest
+# BillerManagementRequest
 
 Request Model class for Biller Management API
+
 ## Properties
 
 Name | Type | Description | Notes

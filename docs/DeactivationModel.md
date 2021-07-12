@@ -3,6 +3,7 @@
 # DeactivationModel
 
 Deactivation Reason and Note Model, only required when action is 'Deactivate'
+
 ## Properties
 
 Name | Type | Description | Notes

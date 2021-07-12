@@ -3,6 +3,7 @@
 # ConvenienceFeeModel
 
 Biller Service Area Model
+
 ## Properties
 
 Name | Type | Description | Notes

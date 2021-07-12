@@ -3,6 +3,7 @@
 # ConsumerAuthenticationModel
 
 Consumer Authentication Model
+
 ## Properties
 
 Name | Type | Description | Notes
