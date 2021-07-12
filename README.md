@@ -155,34 +155,34 @@ To use this API client as dependency library in your own project:
 
 
 ## Use Cases <a name="use-cases"></a>
-##### Case 1: [Onboard new Billers](https://developer.mastercard.com/documentation/biller-management/1#add-biller-example)
+##### Case 1: [Onboard new Billers](https://developer.mastercard.com/biller-management/documentation/code-and-formats/#add-biller-example)
   - Biller Service Providers (BSP) can add their new billers into Billpay Exchange via the Biller Management API.
-  - Sample request payload can be found: [Add Billers](https://github.com/Mastercard/biller-management-reference/blob/master/src/main/resources/payloads/biller-management-add.json)
+  - Sample request payload can be found: [Add Billers](src/main/resources/payloads/biller-management-add.json)
   - Request "action" field will be "add"
   - Command line examples `java -jar target/biller-management-client-1.0.0.jar Add`.
 
-##### Case 2: [Edit Existing Billers](https://developer.mastercard.com/documentation/biller-management/1#update-biller-example)
+##### Case 2: [Edit Existing Billers](https://developer.mastercard.com/biller-management/documentation/code-and-formats/#update-biller-example)
   - Biller Service Providers (BSP) can edit billers that belong to their profile via the Biller Management API.
-  - Sample request payload can be found: [Update Billers](https://github.com/Mastercard/biller-management-reference/blob/master/src/main/resources/payloads/biller-management-update.json)
+  - Sample request payload can be found: [Update Billers](src/main/resources/payloads/biller-management-update.json)
   - Request "action" field will be "update"
   - Command line examples `java -jar target/biller-management-client-1.0.0.jar Update`.
 
-##### Case 3: [Deactivate Existing Billers](https://developer.mastercard.com/documentation/biller-management/1#deactivate-biller-example)
+##### Case 3: [Deactivate Existing Billers](https://developer.mastercard.com/biller-management/documentation/code-and-formats/#deactivate-biller-example)
   - Biller Service Providers (BSP) can deactivate billers that belong to their profile via the Biller Management API.
-  - Sample request payload can be found: [Deactivate Billers](https://github.com/Mastercard/biller-management-reference/blob/master/src/main/resources/payloads/biller-management-deactivate.json)
+  - Sample request payload can be found: [Deactivate Billers](src/main/resources/payloads/biller-management-deactivate.json)
   - Request "action" field will be "deactivate"
   - Command line examples `java -jar target/biller-management-client-1.0.0.jar Deactivate`.
 
-##### Case 4: [Multiple Biller Changes](https://developer.mastercard.com/documentation/biller-management/1#multiple-biller-example)
+##### Case 4: [Multiple Biller Changes](https://developer.mastercard.com/biller-management/documentation/code-and-formats/#multiple-biller-changes-in-single-request-example)
   - Biller Service Providers (BSP) can add, update and deactivate billers that belong to their profile in single request via the Biller Management API.
-  - Sample request payload can be found: [Multiple Billers](https://github.com/Mastercard/biller-management-reference/blob/master/src/main/resources/payloads/biller-management-all.json)
+  - Sample request payload can be found: [Multiple Billers](src/main/resources/payloads/biller-management-all.json)
   - Request "action" field value varies
   - Command line examples `java -jar target/biller-management-client-1.0.0.jar`. No args needed.
 
-##### Case 5: [Error Handling](https://developer.mastercard.com/documentation/biller-management/1#error-codes)
+##### Case 5: [Error Handling](https://developer.mastercard.com/biller-management/documentation/code-and-formats/#gateway-error-codes)
   - The operation can fail for various reasons like formatting, field length exceeds, etc.
   - This use case just shows one of the example of such failures.
-  - For the complete list of application specific error codes, refer to [Application Error Codes](https://developer.mastercard.com/documentation/biller-management/1#error-codes).
+  - For the complete list of application specific error codes, refer to [Application Error Codes](https://developer.mastercard.com/biller-management/documentation/code-and-formats/#error-codes).
   - Also refer to model class [Errors](docs/Errors.md) for field level information.
 
 ## API Reference <a name="api-reference"></a>
