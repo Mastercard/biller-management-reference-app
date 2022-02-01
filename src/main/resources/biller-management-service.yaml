@@ -52,7 +52,7 @@ paths:
                 Error-403:
                   $ref: "#/components/examples/Error-403"
         '500':
-          description: 'Internal Server Error, please contact Billpay Exchange Support Team'
+          description: 'Internal Server Error, please contact Bill Pay Support Team'
           content:
             application/json:
               schema:
@@ -76,19 +76,26 @@ components:
       properties:
         action:
           type: string
-          minLength: 3
+          enum:
+            - Add
+            - Update
+            - Deactivate
           maxLength: 10
-          description: "Biller Action, avaliable values are: Add, Update, Deactivate"
+          description: "Biller Action, available values are: Add, Update, Deactivate"
           example: 'Add'
         effectiveDate:
           type: string
           pattern: (0[1-9]|1[012])[\/](0[1-9]|[12][0-9]|3[01])[\/]((19|20)[0-9]{2})$
-          minLength: 10
           maxLength: 10
           description: 'Effective Date, format MM/DD/YYYY'
           example: '12/31/2030'
         general:
           $ref: '#/components/schemas/GeneralModel'
+        creditorAliases:
+          type: array
+          description: 'Creditor Alias List'
+          items:
+            $ref: '#/components/schemas/CreditorAliasModel'
         serviceRelationships:
           type: array
           description: 'Service Relationship List, currently only allow 1 service relationship per Biller'
@@ -116,41 +123,42 @@ components:
       description: Response Model class for Biller Management API
       required:
         - action
-        - description
-        - effectiveDate
         - statusIndicator
+        - description
       properties:
         action:
           type: string
-          minLength: 0
+          enum:
+            - Add
+            - Update
+            - Deactivate
           maxLength: 10
-          description: Action
+          description: "Biller Action"
         billerId:
           type: string
-          minLength: 0
           maxLength: 10
           pattern: "^[0-9]{10}$"
-          description: Biller ID
+          description: "Biller ID"
         statusIndicator:
           type: string
-          minLength: 7
+          enum:
+            - SUCCESS
+            - REJECTED
           maxLength: 8
-          description: "Status Indicator, avaliable values are: SUCCESS, REJECTED"
+          description: "Status Indicator, available values are: SUCCESS, REJECTED"
         description:
           type: string
-          minLength: 0
           maxLength: 50
-          description: Description
+          description: "Either a Success or Rejection message"
+          example: "Successfully created Biller workflow request."
         workRequestId:
           type: string
-          minLength: 0
           maxLength: 10
-          description: Biller Work Request Id
+          description: "Biller Work Request Id"
         effectiveDate:
           type: string
-          minLength: 0
           maxLength: 10
-          description: Effective Date
+          description: "Effective Date"
         errors:
           type: array
           description: Error List
@@ -166,52 +174,86 @@ components:
         - billerShortName
         - convenienceFee
         - estimatedPostingHour
-        - currencies
       properties:
         billerId:
           type: string
-          minLength: 10
           maxLength: 10
           description: 'Biller Id, 10 digit numeric value'
           example: '0001234567'
         billerLogoUrl:
           type: string
-          minLength: 0
           maxLength: 512
           description: 'Biller Logo URL, max length 512 characters'
           example: 'www.wandaauto.com'
         billerShortName:
           type: string
-          minLength: 0
           maxLength: 35
           description: 'Biller ShortName, max length 35 characters'
           example: 'Wanda Auto'
         convenienceFee:
           type: string
-          minLength: 0
+          enum:
+            - 'Yes'
+            - 'No'
           maxLength: 3
-          description: "Convenience Fee Flag, avaliable values are: Yes, No"
+          description: "Convenience Fee Flag, available values are: Yes, No"
           example: 'Yes'
         estimatedPostingHour:
           type: string
-          minLength: 0
           maxLength: 2
           description: 'Estimated Posting Number, max length 2 numeric value'
           example: '10'
         termsAndConditions:
           type: string
-          minLength: 0
           maxLength: 999999
           description: 'Terms And Conditions Text'
           example: 'Terms And Conditions'
         currencies:
           type: array
-          description: "Currencies, numeric currency code"
+          description: "Currencies, numeric ISO currency code, default is 840 [USD]"
           items:
             type: string
-            minLength: 3
             maxLength: 3
-          example: [840]
+          example: ['840']
+        bankDetail:
+          type: string
+          maxLength: 15
+          description: 'Bank Detail'
+          example: 'Bank Detail'
+        accountInfo:
+          type: string
+          maxLength: 40
+          description: 'Account Information'
+          example: 'SE7280000810340009783242'
+    CreditorAliasModel:
+      type: object
+      title: Credit Alias Model
+      description: Creditor Alias detail
+      properties:
+        recordAction:
+          type: string
+          maxLength: 6
+          enum:
+            - Add
+            - Delete
+            - Update
+          description: "Record Action, available values are: Add, Delete and Update, only required when Biller action is 'Update'"
+          example: "Add"
+        aliasName:
+          type: string
+          maxLength: 70
+          description: 'Credit Alias Name, key field'
+          example: 'Alias'
+        bankDetail:
+          type: string
+          maxLength: 15
+          description: 'Alias Bank Detail'
+          example: 'Alias Bank Detail'
+        accountInfo:
+          type: string
+          maxLength: 40
+          description: 'Alias Account Information'
+          example: 'SE7280000810340009783242'
     ServiceRelationshipModel:
       type: object
       title: Service Relationship Model
@@ -219,41 +261,54 @@ components:
       required:
         - bspId
         - serviceType
+        - settlementServices
       properties:
         recordAction:
           type: string
-          minLength: 3
+          enum:
+            - Add
+            - Delete
+            - Update
           maxLength: 6
-          description: "Record Action, avaliable values are: Add, Delete and Update, only required when Biller action is 'Update'"
+          description: "Record Action, available values are: Add, Update and Delete, only required when Biller action is 'Update'"
           example: "Add"
         bspId:
           type: string
-          minLength: 6
           maxLength: 6
           description: 'BSP ID, 6 digit numeric value'
           example: '000123'
         serviceType:
           type: string
-          minLength: 0
+          enum:
+            - BPX_CL_EB_PAYC
+            - BPX_CL_EB
+            - BPX_CL
           maxLength: 15
-          description: "Biller Service Type, avaliable values are: BPX_CL_EB_PAYC, BPX_CL_EB, BPX_CL"
+          description: "Biller Service Type, available values are: BPX_CL_EB_PAYC, BPX_CL_EB, BPX_CL"
           example: 'BPX_CL_EB_PAYC'
         settlementServices:
           type: array
-          description: "Settlement Services, avaliable values are: RPPS, MPGS, PDSS; RPPS is mandatory"
+          description: "Settlement Services, available values are: RPPS, MPGS, PDSS; RPPS is mandatory"
           items:
             type: string
-            minLength: 1
-            maxLength: 3
-          example: [RPPS, MPGS]
+            enum:
+              - RPPS
+              - MPGS
+              - PDSS
+            maxLength: 4
+          example: ['RPPS', 'MPGS']
         countries:
           type: array
-          description: "Countries, alpha3 country code"
+          description: "Countries, alpha3 country code, default is USA"
           items:
             type: string
-            minLength: 3
             maxLength: 3
-          example: [USA]
+          example: ['USA']
+        primaryCountry:
+          type: string
+          description: "Primary country, value must be one of the values from countries array, will be default to one value if countries array only has one value"
+          maxLength: 3
+          example: 'USA'
     CardPaymentModel:
       type: object
       title: Card Payment Model
@@ -264,19 +319,27 @@ components:
       properties:
         cardNetworks:
           type: array
-          description: "Card Networks, avaliable values are: MAST, VISA, AMEX, DSVR"
+          description: "Card Networks, available values are: MAST, VISA, AMEX, DSVR"
           items:
             type: string
-            minLength: 0
-            maxLength: 5
+            enum:
+              - MAST
+              - VISA
+              - AMEX
+              - DSVR
+            maxLength: 4
           example: [MAST, VISA]
         cardTypes:
           type: array
-          description: "Card Types, avaliable values are: CRDT, DEBT, PRPD"
+          description: "Card Types, available values are: BANK, CRDT, DEBT, PRPD"
           items:
             type: string
-            minLength: 0
-            maxLength: 5
+            enum:
+              - BANK
+              - CRDT
+              - DEBT
+              - PRPD
+            maxLength: 4
           example: [CRDT]
     ConvenienceFeeModel:
       type: object
@@ -289,25 +352,30 @@ components:
       properties:
         recordAction:
           type: string
-          minLength: 3
+          enum:
+            - Add
+            - Delete
+            - Update
           maxLength: 6
-          description: "Record Action, avaliable values are: Add, Delete and Update, only required when Biller action is 'Update'"
+          description: "Record Action, available values are: Add, Update and Delete, only required when Biller action is 'Update'"
           example: "Add"
         paymentType:
           type: string
-          minLength: 0
+          enum:
+            - BANK
+            - CRDT
+            - DEBT
+            - PRPD
           maxLength: 5
-          description: "Payment Type, avaliable values are: CRDT, DEBT, PRPD, BANK"
+          description: "Payment Type, available values are: CRDT, DEBT, PRPD, BANK"
           example: CRDT
         flatFee:
           type: string
-          minLength: 0
           maxLength: 10
           description: Flat Fee
           example: '2.0'
         percentFee:
           type: string
-          minLength: 0
           maxLength: 10
           description: Percent Fee
           example: '0.0'
@@ -319,9 +387,8 @@ components:
       properties:
         zipCodes:
           type: string
-          minLength: 0
           maxLength: 600000
-          description: 'Zip Codes, comma separated 5 digit numeric values'
+          description: 'Zip Codes, comma separated 5 digit numeric values, at least one is required for North America'
           example: '63301, 63302, 63303'
     ConsumerAuthenticationModel:
       type: object
@@ -332,41 +399,52 @@ components:
         - categoryLabel
         - dataType
         - maxLength
-        - notes
       properties:
         recordAction:
           type: string
-          minLength: 3
+          enum:
+            - Add
+            - Delete
+            - Update
           maxLength: 6
-          description: "Record Action, avaliable values are: Add, Delete and Update, only required when Biller action is 'Update'"
+          description: "Record Action, available values are: Add, Update and Delete, only required when Biller action is 'Update'"
           example: "Add"
         category:
           type: string
-          minLength: 0
+          enum:
+            - IDEN
+            - EMAL
+            - PHON
+            - CODE
+            - ADDR
+            - OTHR
           maxLength: 4
-          description: "Category Code, avaliable values are: IDEN, EMAL, PHON, CODE, ADDR, OTHR"
+          description: "Category Code, available values are: IDEN, EMAL, PHON, CODE, ADDR, OTHR"
           example: 'IDEN'
         categoryLabel:
           type: string
-          minLength: 0
           maxLength: 128
           description: 'Category Label, max length 128 characters'
           example: 'Iden Label'
         dataType:
           type: string
-          minLength: 0
+          enum:
+            - 'A'
+            - 'P'
+            - 'N'
+            - 'S'
+            - 'C'
+            - 'D'
           maxLength: 1
-          description: "Consumer Authentication Data Type, avaliable values are: A, P, B, N, S, C, D"
+          description: "Consumer Authentication Data Type, available values are: A, P, B, N, S, C, D"
           example: 'A'
         maxLength:
           type: string
-          minLength: 0
           maxLength: 3
           description: 'Consumer Authentication Maximum length, max length 3 numeric value'
           example: '2'
         notes:
           type: string
-          minLength: 0
           maxLength: 1000
           description: 'Notes text, max length 1000 characters'
           example: 'Max length 2 for IDEN category'
@@ -380,16 +458,20 @@ components:
       properties:
         deactivationReasonCode:
           type: string
-          minLength: 0
+          enum:
+            - BCON
+            - BMIG
+            - LVOL
+            - RBLR
+            - OTHR
           maxLength: 4
-          description: "Deactivation Reason Code, avaliable values are: BCON, BMIG, LVOL, RBLR, OTHR"
+          description: "Deactivation Reason Code, available values are: BCON, BMIG, LVOL, RBLR, OTHR"
           example: 'BCON'
         deactivationNotes:
           type: string
-          minLength: 0
           maxLength: 1000
           description: 'Deactivation Note, max length 1000 characters'
-          example: 'Deactiviation Notes for Wanda Auto'
+          example: 'Deactivation Notes for Wanda Auto'
     Errors:
       type: object
       title: Server Error Model
@@ -412,7 +494,7 @@ components:
                 properties:
                   Source:
                     type: "string"
-                    example: 'Billpay Exchange Biller Management Service'
+                    example: 'Bill Pay Biller Management Service'
                   ReasonCode:
                     type: "string"
                     example: "BPMCAPIBLR_ERR_0000"
@@ -435,72 +517,86 @@ components:
       properties:
         code:
           type: "string"
-          minLength: 0
           maxLength: 50
           example: 'BPMCAPIBLR_WARN_1001'
         message:
           type: "string"
-          minLength: 0
           maxLength: 250
           example: "general.billerId - Required field is missing"
   examples:
     BillerManagementRequestExample:
       value:
-        - action: Add
-          effectiveDate: 12/31/2030
+        - action: 'Add'
+          effectiveDate: '12/31/2030'
           general:
             billerId: '0001234567'
-            billerLogoUrl: www.wandaauto.com
-            billerShortName: Wanda Auto
+            billerLogoUrl: 'www.wandaauto.com'
+            billerShortName: 'Wanda Auto'
             convenienceFee: 'Yes'
             estimatedPostingHour: '10'
-            termsAndConditions: Terms And Conditions
+            termsAndConditions: 'Terms And Conditions'
             currencies:
               - '840'
+            bankDetail: ''
+            accountInfo: 'SE7280000810340009783240'
+          creditorAliases:
+            - aliasName: 'Alias 1'
+              bankDetail: ''
+              accountInfo: 'SE7280000810340009783240'
           serviceRelationships:
             - bspId: '000123'
-              serviceType: BPX_CL_EB_PAY
+              serviceType: 'BPX_CL_EB_PAY'
               settlementServices:
-                - RPPS
-                - MPGS
+                - 'RPPS'
+                - 'MPGS'
               countries:
-                - USA
+                - 'USA'
+              primaryCountry: 'USA'
           cardPaymentSupport:
             cardNetworks:
-              - MAST
-              - VISA
+              - 'MAST'
+              - 'VISA'
             cardTypes:
-              - CRDT
+              - 'CRDT'
           convenienceFees:
-            - paymentType: BANK
+            - paymentType: 'BANK'
               flatFee: '2.0'
               percentFee: '0.0'
-            - paymentType: CRDT
+            - paymentType: 'CRDT'
               flatFee: '2.0'
               percentFee: '0.0'
           serviceAreas:
             zipCodes: "63301,63302,63303"
           consumerAuths:
-            - category: IDEN
-              categoryLabel: Iden Label
-              dataType: A
+            - category: 'IDEN'
+              categoryLabel: 'Iden Label'
+              dataType: 'A'
               maxLength: '2'
-              notes: Max length 2 for IDEN category
-        - action: Update
-          effectiveDate: 12/31/2030
+              notes: 'Max length 2 for IDEN category'
+        - action: 'Update'
+          effectiveDate: '12/31/2030'
           general:
             billerId: '0001234568'
             billerLogoUrl: 'www.alexauto.com'
             termsAndConditions: 'Updated Terms And Conditions'
+          creditorAliases:
+            - recordAction: 'Add'
+              aliasName: 'Alias 2'
+              bankDetail: ''
+              accountInfo: 'SE7280000810340009783241'
+            - recordAction: 'Delete'
+              aliasName: 'Alias 1'
+              bankDetail: ''
+              accountInfo: 'SE7280000810340009783240'
           consumerAuths:
-            - recordAction: Add
-              category: IDEN
-              categoryLabel: Iden Label
-              dataType: A
+            - recordAction: 'Add'
+              category: 'IDEN'
+              categoryLabel: 'Iden Label'
+              dataType: 'A'
               maxLength: '2'
-              notes: Max length 2 for IDEN category
-        - action: Deactivate
-          effectiveDate: 12/31/2030
+              notes: 'Max length 2 for IDEN category'
+        - action: 'Deactivate'
+          effectiveDate: '12/31/2030'
           general:
             billerId: '0001234569'
           deactivation:
@@ -531,7 +627,7 @@ components:
           errors: null
     Error-403:
       value:
-        Errors: { Error: [ { Source: "Billpay Exchange Biller Management Service", ReasonCode: "BPMCAPIBLR_ERR_0004", Description: "User Error", Recoverable: true, Details: "Client ID 'client-id-1234567890' does not have access to manage Billers" } ] }
+        Errors: { Error: [ { Source: "Bill Pay Biller Management Service", ReasonCode: "BPMCAPIBLR_ERR_0004", Description: "User Error", Recoverable: true, Details: "Client ID 'client-id-1234567890' does not have access to manage Billers" } ] }
     Error-500:
       value:
-        Errors: { Error: [ { Source: "Billpay Exchange Biller Management Service", ReasonCode: "BPMCAPIBLR_ERR_0001", Description: "Server Error", Recoverable: false, Details: "Internal Server Error" } ] }
+        Errors: { Error: [ { Source: "Bill Pay Biller Management Service", ReasonCode: "BPMCAPIBLR_ERR_0001", Description: "Server Error", Recoverable: false, Details: "Internal Server Error" } ] }

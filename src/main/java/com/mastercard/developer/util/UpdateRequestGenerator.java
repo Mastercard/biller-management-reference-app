@@ -16,14 +16,14 @@ public class UpdateRequestGenerator {
         // Update fields in general section
         requestList.add(generateUpdateGeneralRequest());
 
-        // Edit existing servcie relationship
+        // Edit existing service relationship
         requestList.add(generateUpdateEditServiceRelationshipRequest());
 
         // Delete existing service relationship and add new one
         requestList.add(generateUpdateAddDeleteServiceRelationshipRequest());
 
         // Edit existing consumer auth and Add a new one
-        requestList.add(generateUpdateConsumerAuthenRequest());
+        requestList.add(generateUpdateConsumerAuthRequest());
 
         // Edit existing card payment
         requestList.add(generateUpdateCardPaymentRequest());
@@ -37,9 +37,9 @@ public class UpdateRequestGenerator {
         return requestList;
     }
 
-    public static BillerManagementRequest generateUpdateReuqestBasic(){
+    public static BillerManagementRequest generateUpdateRequestBasic(){
         BillerManagementRequest request = new BillerManagementRequest();
-        request.setAction("Update"); // required field
+        request.setAction(BillerManagementRequest.ActionEnum.UPDATE); // required field
         String effectiveDate = DateUtil.getNextValidDate(); // valid effective date can't be weekends, or BPX Restricted Holidays
         request.setEffectiveDate(effectiveDate);
 
@@ -50,43 +50,43 @@ public class UpdateRequestGenerator {
     }
 
     public static BillerManagementRequest generateUpdateGeneralRequest(){
-        BillerManagementRequest request = generateUpdateReuqestBasic(); //Only set value for the fields you want to update
+        BillerManagementRequest request = generateUpdateRequestBasic(); //Only set value for the fields you want to update
         request.getGeneral().setBillerLogoUrl("www.updatedURL.com");
         request.getGeneral().setBillerShortName("Updated biller name");
         return request;
     }
 
     public static BillerManagementRequest generateUpdateEditServiceRelationshipRequest(){
-        BillerManagementRequest request = generateUpdateReuqestBasic();
+        BillerManagementRequest request = generateUpdateRequestBasic();
         request.setServiceRelationships(generateUpdateServiceRelationshipModelList("Update"));
         return request;
     }
 
     public static BillerManagementRequest generateUpdateAddDeleteServiceRelationshipRequest(){
-        BillerManagementRequest request = generateUpdateReuqestBasic();
+        BillerManagementRequest request = generateUpdateRequestBasic();
         request.setServiceRelationships(generateUpdateServiceRelationshipModelList("Add"));
         return request;
     }
 
-    public static BillerManagementRequest generateUpdateConsumerAuthenRequest(){
-        BillerManagementRequest request = generateUpdateReuqestBasic();
+    public static BillerManagementRequest generateUpdateConsumerAuthRequest(){
+        BillerManagementRequest request = generateUpdateRequestBasic();
 
         List<ConsumerAuthenticationModel> list = new ArrayList<>();
         // The combination of category and category label is key field,
         // always need to add these 2 fields when updating, it shoud match to an existing record
         ConsumerAuthenticationModel conEdit = new ConsumerAuthenticationModel();
-        conEdit.setRecordAction("Update");
-        conEdit.setCategory("CODE");
+        conEdit.setRecordAction(ConsumerAuthenticationModel.RecordActionEnum.UPDATE);
+        conEdit.setCategory(ConsumerAuthenticationModel.CategoryEnum.CODE);
         conEdit.setCategoryLabel("Code Label");
         conEdit.setMaxLength("10"); //update max length field
         conEdit.setNotes("Update max length");
         list.add(conEdit);
 
         ConsumerAuthenticationModel conAdd = new ConsumerAuthenticationModel();
-        conAdd.setRecordAction("Add");
-        conAdd.setCategory("IDEN");
+        conAdd.setRecordAction(ConsumerAuthenticationModel.RecordActionEnum.ADD);
+        conAdd.setCategory(ConsumerAuthenticationModel.CategoryEnum.IDEN);
         conAdd.setCategoryLabel("IDEN Label");
-        conAdd.setDataType("A");
+        conAdd.setDataType(ConsumerAuthenticationModel.DataTypeEnum.A);
         conAdd.setMaxLength("10");
         conAdd.setNotes("Add new consumer auth");
         list.add(conAdd);
@@ -96,15 +96,15 @@ public class UpdateRequestGenerator {
     }
 
     public static BillerManagementRequest generateUpdateCardPaymentRequest(){
-        BillerManagementRequest request = generateUpdateReuqestBasic();
+        BillerManagementRequest request = generateUpdateRequestBasic();
 
         CardPaymentModel cardPaymentModel = new CardPaymentModel();
-        List<String> cardNetworks = new ArrayList<>();
-        cardNetworks.add("MAST"); // only keep MAST as card network
+        List<CardPaymentModel.CardNetworksEnum> cardNetworks = new ArrayList<>();
+        cardNetworks.add(CardPaymentModel.CardNetworksEnum.MAST); // only keep MAST as card network
         cardPaymentModel.setCardNetworks(cardNetworks);
 
-        List<String> cardTypes = new ArrayList<>();
-        cardTypes.add("CRDT"); //only keep CRDT as card types
+        List<CardPaymentModel.CardTypesEnum> cardTypes = new ArrayList<>();
+        cardTypes.add(CardPaymentModel.CardTypesEnum.CRDT); //only keep CRDT as card types
         cardPaymentModel.setCardTypes(cardTypes);
 
         request.setCardPaymentSupport(cardPaymentModel);
@@ -116,24 +116,27 @@ public class UpdateRequestGenerator {
         if(recordAction.equalsIgnoreCase("Update")){
             // BSP ID is the key field, if BSP ID doesn't change, then it's an 'Update' action
             ServiceRelationshipModel serviceUpdate = new ServiceRelationshipModel();
-            serviceUpdate.setRecordAction("Update");
+            serviceUpdate.setRecordAction(ServiceRelationshipModel.RecordActionEnum.UPDATE);
             serviceUpdate.setBspId("013001");
-            serviceUpdate.setServiceType("BPX_CL_EB"); // downgrade service type to BPX_CL_EB
+            serviceUpdate.setServiceType(ServiceRelationshipModel.ServiceTypeEnum.CL_EB); // downgrade service type to BPX_CL_EB
+            List<ServiceRelationshipModel.SettlementServicesEnum> settlementServicesAdd = new ArrayList<>();
+            settlementServicesAdd.add(ServiceRelationshipModel.SettlementServicesEnum.RPPS); //mandatory settlement service
+            serviceUpdate.setSettlementServices(settlementServicesAdd);
             list.add(serviceUpdate);
         } else{
             //if BSP ID changed, then it's an 'Add' new and "Delete" old action
             ServiceRelationshipModel serviceAdd = new ServiceRelationshipModel();
-            serviceAdd.setRecordAction("Add");
+            serviceAdd.setRecordAction(ServiceRelationshipModel.RecordActionEnum.ADD);
             serviceAdd.setBspId("013111"); // new servive relationship
-            serviceAdd.setServiceType("BPX_CL_EB_PAYC");
-            List<String> settlementServicesAdd = new ArrayList<>();
-            settlementServicesAdd.add("RPPS"); //mandatory settlement service
+            serviceAdd.setServiceType(ServiceRelationshipModel.ServiceTypeEnum.CL_EB_PAYC);
+            List<ServiceRelationshipModel.SettlementServicesEnum> settlementServicesAdd = new ArrayList<>();
+            settlementServicesAdd.add(ServiceRelationshipModel.SettlementServicesEnum.RPPS); //mandatory settlement service
             serviceAdd.setSettlementServices(settlementServicesAdd);
-            serviceAdd.setCountries(Arrays.asList("USA")); // default as USA
+            serviceAdd.setCountries(Arrays.asList("USA")); //mandatory country
             list.add(serviceAdd);
 
             ServiceRelationshipModel serviceDelete = new ServiceRelationshipModel();
-            serviceDelete.setRecordAction("Delete");
+            serviceDelete.setRecordAction(ServiceRelationshipModel.RecordActionEnum.DELETE);
             serviceDelete.setBspId("013111"); // delete existing servive relationship
             list.add(serviceDelete);
         }
@@ -141,26 +144,26 @@ public class UpdateRequestGenerator {
     }
 
     public static BillerManagementRequest generateUpdateConvenienceFeeRequest(){
-        BillerManagementRequest request = generateUpdateReuqestBasic();
+        BillerManagementRequest request = generateUpdateRequestBasic();
 
         List<ConvenienceFeeModel> list = new ArrayList<>();
         ConvenienceFeeModel convBank = new ConvenienceFeeModel();
-        convBank.setRecordAction("Update");
-        convBank.setPaymentType("BANK"); // mandatory payment type when convenience fee is 'Yes'
+        convBank.setRecordAction(ConvenienceFeeModel.RecordActionEnum.UPDATE);
+        convBank.setPaymentType(ConvenienceFeeModel.PaymentTypeEnum.BANK); // mandatory payment type when convenience fee is 'Yes'
         convBank.setFlatFee("4.00"); //update flat fee to 4.00
         convBank.setPercentFee("0.00");
         list.add(convBank);
 
         ConvenienceFeeModel convCrdt = new ConvenienceFeeModel();
-        convCrdt.setRecordAction("Add"); //Add new CRDT fee
-        convCrdt.setPaymentType("CRDT");
+        convCrdt.setRecordAction(ConvenienceFeeModel.RecordActionEnum.ADD); //Add new CRDT fee
+        convCrdt.setPaymentType(ConvenienceFeeModel.PaymentTypeEnum.CRDT);
         convCrdt.setPercentFee("0.02");
         convCrdt.setFlatFee("0.00");
         list.add(convCrdt);
 
         ConvenienceFeeModel convDebt = new ConvenienceFeeModel();
-        convDebt.setRecordAction("Delete"); //remove existing DEBT type
-        convDebt.setPaymentType("DEBT");
+        convDebt.setRecordAction(ConvenienceFeeModel.RecordActionEnum.DELETE); //remove existing DEBT type
+        convDebt.setPaymentType(ConvenienceFeeModel.PaymentTypeEnum.DEBT);
         convDebt.setPercentFee("0.02");
         convDebt.setFlatFee("0.00");
         list.add(convDebt);
@@ -170,7 +173,7 @@ public class UpdateRequestGenerator {
     }
 
     public static BillerManagementRequest generateUpdateServiceAreaRequest(){
-        BillerManagementRequest request = generateUpdateReuqestBasic();
+        BillerManagementRequest request = generateUpdateRequestBasic();
 
         ServiceAreaModel serviceAreaModel = new ServiceAreaModel();
         serviceAreaModel.setZipCodes("23456,78901"); //Update to this zip codes list

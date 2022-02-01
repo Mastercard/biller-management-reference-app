@@ -1,6 +1,7 @@
 package com.mastercard.developer.util;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mastercard.developer.example.BillerManagementApiExample;
 import org.apache.commons.io.IOUtils;
@@ -19,7 +20,7 @@ public class SampleResponseLoader {
         InputStream inputStream  = BillerManagementApiExample.class.getClassLoader().getResourceAsStream(String.format(PAYLOAD_PATH, scenario).toLowerCase());
         String content = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
         ObjectMapper objectMapper = new ObjectMapper();
-        List<BillerManagementResponse> responses = objectMapper.readValue(content, new TypeReference<List<BillerManagementResponse>>(){});
+        List<BillerManagementResponse> responses = objectMapper.enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING).readValue(content, new TypeReference<List<BillerManagementResponse>>(){});
         return responses;
     }
 }

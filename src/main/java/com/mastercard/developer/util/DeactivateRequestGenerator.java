@@ -17,7 +17,7 @@ public class DeactivateRequestGenerator {
 
     public static BillerManagementRequest generateDeactivateRequest(){
         BillerManagementRequest request = new BillerManagementRequest();
-        request.setAction("Deactivate"); // required field
+        request.setAction(BillerManagementRequest.ActionEnum.DEACTIVATE); // required field
         String effectiveDate = DateUtil.getNextValidDate(); // valid effective date can't be weekends, or BPX Restricted Holidays
         request.setEffectiveDate(effectiveDate); // required field
         request.setGeneral(generateGeneralModel());
@@ -33,7 +33,7 @@ public class DeactivateRequestGenerator {
 
     public static DeactivationModel generateDeactivationModel(){
         DeactivationModel deactivationModel = new DeactivationModel();
-        deactivationModel.setDeactivationReasonCode("BCON"); // required field
+        deactivationModel.setDeactivationReasonCode(DeactivationModel.DeactivationReasonCodeEnum.BCON); // required field
         deactivationModel.setDeactivationNotes("Deactivate Biller"); // required field
         return deactivationModel;
     }
