@@ -5,6 +5,7 @@ import org.openapitools.client.model.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 public class UpdateRequestGenerator {
 
@@ -15,6 +16,12 @@ public class UpdateRequestGenerator {
 
         // Update fields in general section
         requestList.add(generateUpdateGeneralRequest());
+
+        // Update Multiple Payments field in general section
+        requestList.add(generateUpdateGeneralRequestWithMultiplePayments());
+
+        // Update Payment Caps and Payment Cap Allowance fields in general section
+        requestList.add(generateUpdateGeneralRequestWithPaymentCaps());
 
         // Edit existing service relationship
         requestList.add(generateUpdateEditServiceRelationshipRequest());
@@ -53,6 +60,24 @@ public class UpdateRequestGenerator {
         BillerManagementRequest request = generateUpdateRequestBasic(); //Only set value for the fields you want to update
         request.getGeneral().setBillerLogoUrl("www.updatedURL.com");
         request.getGeneral().setBillerShortName("Updated biller name");
+        return request;
+    }
+
+    public static BillerManagementRequest generateUpdateGeneralRequestWithMultiplePayments(){
+        BillerManagementRequest request = generateUpdateRequestBasic(); //Only set value for the fields you want to update
+        request.getGeneral().setBillerLogoUrl("www.updatedURL.com");
+        request.getGeneral().setBillerShortName("Updated biller name");
+        request.getGeneral().setMultiplePayments(GeneralModel.MultiplePaymentsEnum.YES);
+        return request;
+    }
+
+    public static BillerManagementRequest generateUpdateGeneralRequestWithPaymentCaps(){
+        BillerManagementRequest request = generateUpdateRequestBasic(); //Only set value for the fields you want to update
+        request.getGeneral().setBillerLogoUrl("www.updatedURL.com");
+        request.getGeneral().setBillerShortName("Updated biller name");
+        request.getGeneral().setMultiplePayments(GeneralModel.MultiplePaymentsEnum.YES);
+        request.getGeneral().setPaymentCaps(GeneralModel.PaymentCapsEnum.YES);
+        request.getGeneral().setPaymentCapAllowance("10");
         return request;
     }
 
@@ -133,6 +158,9 @@ public class UpdateRequestGenerator {
             settlementServicesAdd.add(ServiceRelationshipModel.SettlementServicesEnum.RPPS); //mandatory settlement service
             serviceAdd.setSettlementServices(settlementServicesAdd);
             serviceAdd.setCountries(Arrays.asList("USA")); //mandatory country
+            Random rd = new Random();
+            boolean hasFullInvoiceDetails = rd.nextBoolean();
+            serviceAdd.setFullInvoiceDetails(hasFullInvoiceDetails ? ServiceRelationshipModel.FullInvoiceDetailsEnum.YES : ServiceRelationshipModel.FullInvoiceDetailsEnum.NO);
             list.add(serviceAdd);
 
             ServiceRelationshipModel serviceDelete = new ServiceRelationshipModel();

@@ -180,6 +180,57 @@ components:
           maxLength: 10
           description: 'Biller Id, 10 digit numeric value'
           example: '0001234567'
+        rppsBiller:
+          type: string
+          maxLength: 3
+          enum:
+            - 'Yes'
+            - 'No'
+          description: "Indicates if the billerId being sent is intended to match an RPPS Biller or is a Biller only in Mastercard Bill Pay. Default value is ‘Yes’. This field only applies to the NAM region."
+          example: 'Yes'
+        billerName:
+          type: string
+          maxLength: 70
+          description: "Biller Name, up to 70 characters, conditional field, field be blank when rppsBiller is ‘Yes’ and populated with a valid value when rppsBiller is ‘No’"
+          example: 'Wanda Auto Inc'
+        billerClass:
+          type: string
+          maxLength: 3
+          enum:
+            - AIR
+            - AFI
+            - BCA
+            - CAB
+            - CME
+            - CHU
+            - CSP
+            - DSL
+            - FSE
+            - GOC
+            - HSE
+            - HAS
+            - INS
+            - LFI
+            - MOR
+            - MUN
+            - OTH
+            - PBA
+            - PHN
+            - PDC
+            - RET
+            - RPR
+            - SAN
+            - STV
+            - SRA
+            - SSY
+            - SES
+            - SUB
+            - TAX
+            - TUI
+            - UTL
+            - WPH
+          description: 'Biller Class Code, 3 characters code, conditional field, field be blank when rppsBiller is ‘Yes’ and populated with a valid value when rppsBiller is ‘No’'
+          example: 'RET'
         billerLogoUrl:
           type: string
           maxLength: 512
@@ -225,6 +276,35 @@ components:
           maxLength: 40
           description: 'Account Information'
           example: 'SE7280000810340009783242'
+        multiplePayments:
+          type: string
+          maxLength: 3
+          enum:
+            - 'Yes'
+            - 'No'
+          description: "Multiple Payment Flag, available values are: Yes, No. Default value is ‘No’"
+          example: 'Yes'
+        paymentCaps:
+          type: string
+          maxLength: 3
+          enum:
+            - 'Yes'
+            - 'No'
+          description: "Payment Caps Flag, available values are: Yes, No, conditional field, field can only be 'Yes' when multiplePayments is 'Yes'. Default value is ‘No’"
+          example: 'Yes'
+        paymentCapAllowance:
+          type: string
+          maxLength: 2
+          description: "Payment Cap Allowance, up to 2 digit numeric value, conditional field, field can only contain value when paymentCaps is 'Yes'."
+          example: '10'
+        creditBalance:
+          type: string
+          maxLength: 3
+          enum:
+            - 'Yes'
+            - 'No'
+          description: "Credit Balance Flag, available values are: Yes, No"
+          example: 'Yes'
     CreditorAliasModel:
       type: object
       title: Credit Alias Model
@@ -309,6 +389,14 @@ components:
           description: "Primary country, value must be one of the values from countries array, will be default to one value if countries array only has one value"
           maxLength: 3
           example: 'USA'
+        fullInvoiceDetails:
+          type: string
+          maxLength: 3
+          enum:
+            - 'Yes'
+            - 'No'
+          description: "Full Invoice Details Flag, available values are: Yes, No, conditional field, field can only be 'Yes' when BSE Service Type Group is BPX and External CMS type is BSP or CMS. Default value is ‘No’"
+          example: 'Yes'
     CardPaymentModel:
       type: object
       title: Card Payment Model
@@ -530,6 +618,7 @@ components:
           effectiveDate: '12/31/2030'
           general:
             billerId: '0001234567'
+            rppsBiller: 'Yes'
             billerLogoUrl: 'www.wandaauto.com'
             billerShortName: 'Wanda Auto'
             convenienceFee: 'Yes'
@@ -539,6 +628,10 @@ components:
               - '840'
             bankDetail: ''
             accountInfo: 'SE7280000810340009783240'
+            multiplePayments: 'No'
+            paymentCaps: 'No'
+            paymentCapAllowance: 'No'
+            creditBalance: 'No'
           creditorAliases:
             - aliasName: 'Alias 1'
               bankDetail: ''
@@ -552,6 +645,61 @@ components:
               countries:
                 - 'USA'
               primaryCountry: 'USA'
+              fullInvoiceDetails: 'Yes'
+          cardPaymentSupport:
+            cardNetworks:
+              - 'MAST'
+              - 'VISA'
+            cardTypes:
+              - 'CRDT'
+          convenienceFees:
+            - paymentType: 'BANK'
+              flatFee: '2.0'
+              percentFee: '0.0'
+            - paymentType: 'CRDT'
+              flatFee: '2.0'
+              percentFee: '0.0'
+          serviceAreas:
+            zipCodes: "63301,63302,63303"
+          consumerAuths:
+            - category: 'IDEN'
+              categoryLabel: 'Iden Label'
+              dataType: 'A'
+              maxLength: '2'
+              notes: 'Max length 2 for IDEN category'
+        - action: 'Add'
+          effectiveDate: '12/31/2030'
+          general:
+            billerId: '0001234567'
+            rppsBiller: 'No'
+            billerName: "Wanda Auto Inc"
+            billerClass: "RET"
+            billerLogoUrl: 'www.wandaauto.com'
+            billerShortName: 'Wanda Auto'
+            convenienceFee: 'Yes'
+            estimatedPostingHour: '10'
+            termsAndConditions: 'Terms And Conditions'
+            currencies:
+              - '840'
+            bankDetail: ''
+            accountInfo: 'SE7280000810340009783240'
+            multiplePayments: 'Yes'
+            paymentCaps: 'Yes'
+            paymentCapAllowance: '10'
+            creditBalance: 'Yes'
+          creditorAliases:
+            - aliasName: 'Alias 1'
+              bankDetail: ''
+              accountInfo: 'SE7280000810340009783240'
+          serviceRelationships:
+            - bspId: '000123'
+              serviceType: 'BPX_CL_EB_PAY'
+              settlementServices:
+                - 'RPPS'
+                - 'MPGS'
+              countries:
+                - 'USA'
+              fullInvoiceDetails: 'No'
           cardPaymentSupport:
             cardNetworks:
               - 'MAST'
@@ -579,6 +727,9 @@ components:
             billerId: '0001234568'
             billerLogoUrl: 'www.alexauto.com'
             termsAndConditions: 'Updated Terms And Conditions'
+            multiplePayments: 'Yes'
+            paymentCaps: 'Yes'
+            paymentCapAllowance: '20'
           creditorAliases:
             - recordAction: 'Add'
               aliasName: 'Alias 2'
