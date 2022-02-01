@@ -5,7 +5,6 @@ import org.openapitools.client.model.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 public class AddRequestGenerator {
 
@@ -25,11 +24,6 @@ public class AddRequestGenerator {
         // "Add" action with convenienceFee false, cardPaymentEnabled false and namCorridor false
         requestList.add(generateAddRequest(false, false, false));
 
-        // "Add" action with Multiple Payments field
-        requestList.add(generateAddRequestWithMultiplePayments());
-
-        // "Add" action with Multiple Payment Caps
-        requestList.add(generateAddRequestWithPaymentCaps());
         return requestList;
     }
 
@@ -61,36 +55,6 @@ public class AddRequestGenerator {
         return request;
     }
 
-    public static BillerManagementRequest generateAddRequestWithMultiplePayments(){
-        BillerManagementRequest request = new BillerManagementRequest();
-        request.setAction(BillerManagementRequest.ActionEnum.ADD); // required field
-        String effectiveDate = DateUtil.getNextValidDate();  // valid effective date can't be weekends, or BPX Restricted Holidays
-        request.setEffectiveDate(effectiveDate); // required field
-
-
-        request.setGeneral(generateGeneralModel(GeneralModel.ConvenienceFeeEnum.NO, false));
-        request.setServiceRelationships(generateServiceRelationshipModelList(false, false));
-        request.getGeneral().setMultiplePayments(GeneralModel.MultiplePaymentsEnum.YES);
-
-        return request;
-    }
-
-    public static BillerManagementRequest generateAddRequestWithPaymentCaps(){
-        BillerManagementRequest request = new BillerManagementRequest();
-        request.setAction(BillerManagementRequest.ActionEnum.ADD); // required field
-        String effectiveDate = DateUtil.getNextValidDate();  // valid effective date can't be weekends, or BPX Restricted Holidays
-        request.setEffectiveDate(effectiveDate); // required field
-
-
-        request.setGeneral(generateGeneralModel(GeneralModel.ConvenienceFeeEnum.NO, false));
-        request.setServiceRelationships(generateServiceRelationshipModelList(false, false));
-        request.getGeneral().setMultiplePayments(GeneralModel.MultiplePaymentsEnum.YES);
-        request.getGeneral().setPaymentCaps(GeneralModel.PaymentCapsEnum.YES);
-        request.getGeneral().setPaymentCapAllowance("10");
-
-        return request;
-    }
-
     public static GeneralModel generateGeneralModel(GeneralModel.ConvenienceFeeEnum convenienceFeeFlag, boolean namCorridor){
         GeneralModel general = new GeneralModel();
         general.setBillerId(String.valueOf(BILLER_ID++)); // required field
@@ -99,13 +63,6 @@ public class AddRequestGenerator {
         general.setEstimatedPostingHour("3");
         general.setTermsAndConditions("Terms and Conditions");
         general.setConvenienceFee(convenienceFeeFlag);
-        Random rd = new Random();
-        boolean isRppsBiller = rd.nextBoolean();
-        general.setRppsBiller(isRppsBiller ? GeneralModel.RppsBillerEnum.YES : GeneralModel.RppsBillerEnum.NO);
-        if(!isRppsBiller) {
-            general.setBillerName("United Power");
-            general.setBillerClass(GeneralModel.BillerClassEnum.UTL);
-        }
         if(namCorridor) {
             general.setCurrencies(Arrays.asList("840"));
         } else {
@@ -129,9 +86,6 @@ public class AddRequestGenerator {
         service.setSettlementServices(settlementServices);
         service.setCountries(namCorridor ? Arrays.asList("USA") : Arrays.asList("DNK"));
         service.setPrimaryCountry(namCorridor ? "USA" : "DNK"); // field only mandatory when multiple countries selected
-        Random rd = new Random();
-        boolean hasFullInvoiceDetails = rd.nextBoolean();
-        service.setFullInvoiceDetails(hasFullInvoiceDetails ? ServiceRelationshipModel.FullInvoiceDetailsEnum.YES : ServiceRelationshipModel.FullInvoiceDetailsEnum.NO);
         list.add(service);
         return list;
     }
